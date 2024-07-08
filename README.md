@@ -44,7 +44,7 @@ Ce script représente les étapes de la pipeline CI/CD qui contient une étape B
 Pour lancer la pipeline, il faut stimuler un push pour déclencher le processus. Une simple modification de ce ReadMe peut faire le nécessaire par exemple. 
 
 - Commentez le fichier ci.yml pour faciliter à Anis la compréhension de la pipeline.
-- Lancez la pipeline en stimulant un push et rapportez les résultats de la pipeline dans un slide PPT. - MODIFICATION TEST -
+- Lancez la pipeline en stimulant un push et rapportez les résultats de la pipeline dans un slide PPT. - MODIFICATION -
 
   Temps estimé : 45 minutes
 
