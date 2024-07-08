@@ -1,41 +1,35 @@
-version: '3.8'  # Spécifie la version de Docker Compose utilisée.
+version: '3.8'  # Spécifie la version de Docker Compose utilisée. Cela garantit la compatibilité avec les fonctionnalités utilisées dans le fichier.
 
-services:
-  symfony:  # Définition du service Symfony, l'application principale.
-    build:  # Construit l'image Docker à partir d'un Dockerfile.
-      context: .  # Répertoire de contexte de build, ici le répertoire courant.
-      dockerfile: .devcontainer/Dockerfile  # Chemin vers le Dockerfile utilisé pour le build.
+services:  # Définit les différents services (conteneurs) que l'application va utiliser.
+
+  symfony:  # Nom du premier service, qui sera notre application Symfony.
+    build:  # Instructions pour construire l'image Docker de ce service.
+      context: .  # Le contexte de build indique où trouver les fichiers nécessaires pour construire l'image.
+      dockerfile: .devcontainer/Dockerfile  # Chemin spécifique du Dockerfile utilisé pour construire l'image.
     volumes:
-      - .:/var/www/html  # Montage du code source dans le conteneur.
+      - .:/var/www/html  # Montage du code source dans le conteneur. Le '.' représente le répertoire courant sur l'hôte.
     ports:
-      - "8080:80"  # Redirection du port 80 du conteneur vers le port 8080 de l'hôte.
+      - "8080:80"  # Mappage des ports. Rend le port 80 du conteneur accessible sur le port 8080 de l'hôte.
     depends_on:
-      - db  # Dépendance vers le service de base de données.
-      - redis  # Dépendance vers le service Redis.
+      - db  # Indique que ce service dépend du service 'db' (base de données).
+      - redis  # Indique que ce service dépend du service 'redis'.
 
   db:  # Service de base de données MariaDB.
-    image: mariadb:latest  # Utilise la dernière image MariaDB.
+    image: mariadb:latest  # Utilise l'image officielle de MariaDB disponible sur Docker Hub.
     environment:
-      MYSQL_ROOT_PASSWORD: root  # Mot de passe root (à changer pour plus de sécurité).
-      MYSQL_DATABASE: symfony  # Nom de la base de données.
-      MYSQL_USER: symfony  # Utilisateur de la base de données.
-      MYSQL_PASSWORD: symfony  # Mot de passe de l'utilisateur (à changer pour plus de sécurité).
+      MYSQL_ROOT_PASSWORD: root  # Définit le mot de passe root de MySQL (important : à changer en production pour des raisons de sécurité).
+      MYSQL_DATABASE: symfony  # Nom de la base de données créée automatiquement.
+      MYSQL_USER: symfony  # Nom de l'utilisateur de la base de données.
+      MYSQL_PASSWORD: symfony  # Mot de passe pour l'utilisateur (à changer en production).
     ports:
-      - "3306:3306"  # Exposition du port de la base de données.
+      - "3306:3306"  # Expose le port 3306 du conteneur sur le port 3306 de l'hôte, permettant l'accès à la base de données.
     volumes:
-      - db_data:/var/lib/mysql  # Volume persistant pour les données de la base de données.
+      - db_data:/var/lib/mysql  # Utilise un volume nommé pour la persistance des données de la base de données.
 
-  redis:
-    image: redis:latest  # Utilise la dernière image Redis.
+  redis:  # Service Redis pour le caching ou autres fonctionnalités nécessitant un stockage rapide de clé-valeur.
+    image: redis:latest  # Utilise la dernière version de l'image Redis disponible sur Docker Hub.
     ports:
-      - "6379:6379"  # Exposition du port Redis.
+      - "6379:6379"  # Expose le port 6379 de Redis sur le même port de l'hôte.
 
-volumes:
-  db_data:  # Définition du volume pour la persistance des données MariaDB.
-
-
-
-
-# Ne pas utiliser latest pour les images Docker : spécifiez des versions précises pour éviter des surprises lors des mises à jour des images qui pourraient introduire des incompatibilités ou des failles de sécurité.
-# Changer les mots de passe par défaut : les valeurs comme MYSQL_ROOT_PASSWORD: root doivent être remplacées par des mots de passe forts et idéalement gérés via des secrets.
-# Ne pas exposer inutilement les ports : si le service n'est pas destiné à être accessible de l'extérieur, ne pas publier les ports sur l'hôte. Si nécessaire, assurez-vous que l'accès est sécurisé.
+volumes:  # Définition des volumes utilisés dans les services.
+  db_data:  # Volume nommé pour la persistance des données MariaDB. Cela permet de conserver les données même si le conteneur est détruit.
