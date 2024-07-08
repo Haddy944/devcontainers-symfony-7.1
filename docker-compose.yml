@@ -32,3 +32,10 @@ services:
 
 volumes:
   db_data:  # Définition du volume pour la persistance des données MariaDB.
+
+
+
+
+# Ne pas utiliser latest pour les images Docker : spécifiez des versions précises pour éviter des surprises lors des mises à jour des images qui pourraient introduire des incompatibilités ou des failles de sécurité.
+# Changer les mots de passe par défaut : les valeurs comme MYSQL_ROOT_PASSWORD: root doivent être remplacées par des mots de passe forts et idéalement gérés via des secrets.
+# Ne pas exposer inutilement les ports : si le service n'est pas destiné à être accessible de l'extérieur, ne pas publier les ports sur l'hôte. Si nécessaire, assurez-vous que l'accès est sécurisé.
