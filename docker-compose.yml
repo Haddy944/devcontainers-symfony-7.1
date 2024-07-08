@@ -1,34 +1,34 @@
-version: '3.8'
+version: '3.8'  # Spécifie la version de Docker Compose utilisée.
 
 services:
-  symfony:
-    build:
-      context: .
-      dockerfile: .devcontainer/Dockerfile
+  symfony:  # Définition du service Symfony, l'application principale.
+    build:  # Construit l'image Docker à partir d'un Dockerfile.
+      context: .  # Répertoire de contexte de build, ici le répertoire courant.
+      dockerfile: .devcontainer/Dockerfile  # Chemin vers le Dockerfile utilisé pour le build.
     volumes:
-      - .:/var/www/html
+      - .:/var/www/html  # Montage du code source dans le conteneur.
     ports:
-      - "8080:80"
+      - "8080:80"  # Redirection du port 80 du conteneur vers le port 8080 de l'hôte.
     depends_on:
-      - db
-      - redis
+      - db  # Dépendance vers le service de base de données.
+      - redis  # Dépendance vers le service Redis.
 
-  db:
-    image: mariadb:latest
+  db:  # Service de base de données MariaDB.
+    image: mariadb:latest  # Utilise la dernière image MariaDB.
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: symfony
-      MYSQL_USER: symfony
-      MYSQL_PASSWORD: symfony
+      MYSQL_ROOT_PASSWORD: root  # Mot de passe root (à changer pour plus de sécurité).
+      MYSQL_DATABASE: symfony  # Nom de la base de données.
+      MYSQL_USER: symfony  # Utilisateur de la base de données.
+      MYSQL_PASSWORD: symfony  # Mot de passe de l'utilisateur (à changer pour plus de sécurité).
     ports:
-      - "3306:3306"
+      - "3306:3306"  # Exposition du port de la base de données.
     volumes:
-      - db_data:/var/lib/mysql
+      - db_data:/var/lib/mysql  # Volume persistant pour les données de la base de données.
 
   redis:
-    image: redis:latest
+    image: redis:latest  # Utilise la dernière image Redis.
     ports:
-      - "6379:6379"
+      - "6379:6379"  # Exposition du port Redis.
 
 volumes:
-  db_data:
+  db_data:  # Définition du volume pour la persistance des données MariaDB.
